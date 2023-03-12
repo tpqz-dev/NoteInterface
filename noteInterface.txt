@@ -1,0 +1,93 @@
+// interface NoteInterfaceConfig
+// Use Visual studio code with Jonathan Ouellet Zscript Plugin for Syntaxic coloration
+// and code suggession  
+// TPQZ 2019 
+// Description: creates a noteInterface with one fixed button, 4 parametrized buttons, and a close button
+// can be called with :  [RoutineCall,NoteInterfaceConfig,values] 
+// the index of the chosed item is stored in gResult
+
+// Declaration of array
+[VarDef,INISIZE,5]
+[VarDef,values(INISIZE) ]  
+[VarSet,values(0), "Red"]  
+[VarSet,values(1), "Susan"]  
+[VarSet,values(2), "Ben"] 
+[VarSet,values(3), "jhonny"]  
+[VarSet,values(4), "franklin"]  
+[VarDef,gResult,""] 
+[VarDef,result,0]
+[RoutineDef,generateNoteIbutton,
+       [NoteIButton,name,,,,x,y,width,height,bgColor,color,0.7]
+,
+name,x,y,width,height,bgColor,color]
+
+// Note interface routine
+[RoutineDef,NoteInterfaceConfig,// Note interface routine
+    [VarSet, arraySize, [VarSize, array]]
+    [VarDef,choosenName, ""] 
+    [VarDef, startButton,2] // the first button and the fixed button
+    [Loop,1000,//Execution loop, until Serve Now or Cancel choice ends loop exits on LoopExit
+        [VarDef,result,0]
+        // first bouton serve as panel for the other buttons
+        [NoteIButton,/*text*/,/*image*/,/*pressed?*/,1	/*disabled?*/,1,1,400,280,,,0]
+        // title button put an image of the same zize
+        //[NoteIButton,"Baxter Building",/*image*/,/*pressed?*/,/*disabled?*/,40,1,320,20,0xffa000, 0x101010] 
+        [RoutineCall,generateNoteIbutton,"Baxter Building",40,1,320,20,0xffa000,0x101010]// Fixed  button
+        [VarDef,i,0]
+        [VarDef,name, ""]
+        [VarDef,yValue,0]
+        // loop create button list
+            [Loop,arraySize,
+            
+                [VarSet,yValue,i*28+1+24] // 28+1+24 = vertical offset 
+                [VarSet,name, #array(#i)]
+                //[NoteIButton,name,,,,40,yValue,290,20,0xe4bc72,0x101010,0.7]
+                [RoutineCall,generateNoteIbutton,name,40,yValue,290,20,0xe4bc72,0x101010]
+                ,
+                i
+            ]
+        [NoteIButton,"CLOSE",,,,40,250,315,20,0xffa000, 0x101010]
+        [VarInc,buttonId]
+      
+        [VarSet,result,[Val,[Note,""]]]//get result of the note
+        [VarSet,gResult,(result-(startButton+1))] // start button +current
+
+
+        [If,result==startButton,// exit the loop if it's the first one (start at 3 because one is the main NoteIbutton + the Baster building button) 
+            [notebar,[StrMerge,result," " ,"  FIRST ONE ... "]]
+            [VarSet,gResult,-1] 
+            [LoopExit]//exits loop and interface
+        ]
+
+        [If, result>#startButton , // the array buttons beetween 2 and arraysize+2 6
+                [If, result<=[Val,arraySize+startButton]  ,
+                [notebar,[StrMerge, "  " ,[val,arraySize+startButton] ," ",result," " ," - button of array Pressed"]]
+                [LoopExit]//exits loop and interface
+                ,
+                 [notebar,[StrMerge,result," " ,"  CLOSE BUTTON ... "]]
+                [VarSet,gResult,-1] 
+                [LoopExit]//exit
+                ]
+        ]
+
+        [If,result>[Val,arraySize+startButton],//Cancel button >6 
+            [notebar,[StrMerge,result," " ,"  CLOSE BUTTON ... "]]
+            [VarSet,gResult,-1] 
+            [LoopExit]//exits loop and interface
+        ]
+    ]//end loop
+    ,
+    array
+]//end routine
+
+
+[IButton,"test NoteInterface","test NoteInterface",
+   [RoutineCall,NoteInterfaceConfig,values]
+   // do what you want with gResult
+   [If, gResult!=-1,
+    [VarSet,choosenName,values(gResult)] 
+    [Note, [StrMerge,"You choosed index :",gResult," ",#values(gResult)  ]]
+    , // else 
+    [Note, "You choosed Baxter Building or cancelled" ]
+   ]
+,,100]
