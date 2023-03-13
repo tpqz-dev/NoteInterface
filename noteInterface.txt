@@ -102,6 +102,6 @@ name,x,y,width,height,bgColor,color]
     [VarSet,choosenName,values(gResult)] 
     [Note, [StrMerge,"You choosed index :",gResult," ",#values(gResult)  ]]
     , // else 
-    [Note, "You choosed Baxter Building or cancelled" ]
+    [Note, "You choosed cancel" ]
    ]
 ,,100]
