@@ -25,11 +25,11 @@ name,x,y,width,height,bgColor,color]
 [RoutineDef,NoteInterfaceConfig,// Note interface routine
     [VarSet, arraySize, [VarSize, array]]
     [VarDef,choosenName, ""] 
-    [VarDef, startButton,2] // the first button and the fixed button
+    [VarDef, startButton,2] // the first button + the fixed button = 2 
     [Loop,1000,//Execution loop, until Serve Now or Cancel choice ends loop exits on LoopExit
         [VarDef,result,0]
-        // first bouton serve as panel for the other buttons
-        [NoteIButton,/*text*/,/*image*/,/*pressed?*/,1	/*disabled?*/,1,1,400,280,,,0]
+        // first button serve as panel for the other buttons
+        [NoteIButton,/*text*/,/*image*/,/*pressed?*/,1	/*disabled?*/,1,1,400,280,,,0] // classic NoteIbutton
         // title button put an image of the same zize
         [RoutineCall,generateNoteIbutton,"Baxter Building",40,1,320,20,0xffa000,0x101010]// Fixed  button
         [VarDef,i,0]
@@ -51,7 +51,7 @@ name,x,y,width,height,bgColor,color]
         [VarSet,gResult,(result-(startButton+1))] // start button +current
 
 
-        [If,result==startButton,// exit the loop if it's the first one (start at 3 because one is the main NoteIbutton + the Baster building button) 
+        [If,result==startButton,// exit the loop if it's the first one (start at 2 because one is the main NoteIbutton + the Baster building button) 
             [notebar,[StrMerge,result," " ,"  FIRST ONE ... "]]
             [VarSet,gResult,-1] 
             [LoopExit]//exits loop and interface
