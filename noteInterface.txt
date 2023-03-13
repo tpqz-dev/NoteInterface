@@ -25,10 +25,14 @@
 [VarDef,BUTTONHEIGHT,20]
 [VarDef,BUTTONWIDTH,320]
 [VarDef,BUTTONXPOSITION,40]
+[VarDef,BUTTONCOLOR,0x101010]
+[VarDef,BUTTONBGCOLOR,0xe4bc72]
 // close
 [VarDef,CLOSEXPOSITION,40]
 [VarDef,CLOSEYPOSITION,250]
 [VarDef,CLOSEWIDTH,315]
+[VarDef,CLOSECOLOR,0x101010]
+[VarDef,CLOSEBGCOLOR,0xffa000]
 
 // [routines section]
 [RoutineDef,generatePanel,
@@ -57,11 +61,11 @@ name,x,y,width,height,bgColor,color]
             
                 [VarSet,yValue,(BUTTONHEIGHT*2)*(i+1)] //  vertical offset 
                 [VarSet,name, #array(#i)]
-                [RoutineCall,generateNoteIbutton,name,BUTTONXPOSITION,yValue,BUTTONWIDTH,BUTTONHEIGHT,0xe4bc72,0x101010]
+                [RoutineCall,generateNoteIbutton,name,BUTTONXPOSITION,yValue,BUTTONWIDTH,BUTTONHEIGHT,BUTTONBGCOLOR,BUTTONCOLOR]
                 ,
                 i
             ]
-        [RoutineCall,generateNoteIbutton,"CLOSE",CLOSEXPOSITION,CLOSEYPOSITION,CLOSEWIDTH,BUTTONHEIGHT,0xffa000,0x101010]
+        [RoutineCall,generateNoteIbutton,"CLOSE",CLOSEXPOSITION,CLOSEYPOSITION,CLOSEWIDTH,BUTTONHEIGHT,CLOSEBGCOLOR,CLOSECOLOR]
         [VarInc,buttonId]
       
         // loop get result
