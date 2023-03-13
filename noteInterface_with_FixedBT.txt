@@ -44,18 +44,18 @@ name,x,y,width,height,bgColor,color]
 [RoutineDef,NoteInterfaceConfig,// Note interface routine
     [VarSet, arraySize, [VarSize, array]]
     [VarDef,choosenName, ""] 
-    [VarDef, startButton,1] // the Panel button + the fixed button = 2 -- reducee to 1 if fixed button is removed
+    [VarDef, startButton,2] // the Panel button + the fixed button = 2 -- reducee to 1 if fixed button is removed
     [Loop,1000,//Execution loop, will loop untill loop exit
         [VarDef,result,0]
         [RoutineCall,generatePanel] // 
-      
+        [RoutineCall,generateNoteIbutton,"Baxter Building",BUTTONXPOSITION,1,BUTTONWIDTH,BUTTONHEIGHT,0xffa000,0x101010]// Fixed  button
         [VarDef,i,0]
         [VarDef,name, ""]
         [VarDef,yValue,0]
         // loop create button list
             [Loop,arraySize,
             
-                [VarSet,yValue,(BUTTONHEIGHT*2)*(i+1)] //  vertical offset 
+                [VarSet,yValue,(BUTTONHEIGHT*2)*(i+1)] // 28+1+24 = vertical offset 
                 [VarSet,name, #array(#i)]
                 [RoutineCall,generateNoteIbutton,name,BUTTONXPOSITION,yValue,BUTTONWIDTH,BUTTONHEIGHT,0xe4bc72,0x101010]
                 ,
@@ -68,8 +68,14 @@ name,x,y,width,height,bgColor,color]
         [VarSet,result,[Val,[Note,""]]]//get result of the note return an integer
         [VarSet,gResult,(result-(startButton+1))] // start button +current
 
-   
-        [If, result>#startButton , // the array buttons 
+        // loop verify result
+        [If,result==startButton,// exit the loop if it's the first one (start at 2 because one is the main NoteIbutton + the Baster building button) 
+            [notebar,[StrMerge,result," " ,"  FIRST ONE ... "]]
+            [VarSet,gResult,-1] 
+            [LoopExit]//exits loop and interface
+        ]
+
+        [If, result>#startButton , // the array buttons beetween 2 and arraysize+2 6
                 [If, result<=[Val,arraySize+startButton]  , // parameter buttons only
                 [notebar,[StrMerge, "  " ,[val,arraySize+startButton] ," ",result," " ," - button of array Pressed"]]
                 [LoopExit]//exits loop and interface
@@ -80,7 +86,7 @@ name,x,y,width,height,bgColor,color]
                 ]
         ]
 
-        [If,result>[Val,arraySize+startButton],//Cancel button 
+        [If,result>[Val,arraySize+startButton],//Cancel button >6 
             [notebar,[StrMerge,result," " ,"  CLOSE BUTTON ... "]]
             [VarSet,gResult,-1] 
             [LoopExit]//exits loop and interface
